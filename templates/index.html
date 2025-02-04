@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Strength Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #121212; 
+            color: white; 
+        }
+
+        .container {
+            background-color: #1a1a1a; 
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            color: #ff69b4; 
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #a9a9a9;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background-color: #333; 
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .strength {
+            font-size: 18px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .strength.weak {
+            color: red;
+        }
+
+        .strength.medium {
+            color: yellow;
+        }
+
+        .strength.strong {
+            color: green;
+        }
+
+        .toggle-btn {
+            background-color: #1e90ff; 
+            color: white;
+            border: none;
+            padding: 8px 15px; 
+            border-radius: 5px;
+            cursor: pointer;
+            width: 120px; 
+            margin: 0 auto; 
+            display: block;
+        }
+
+        .toggle-btn:hover {
+            background-color: #4682b4;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Password Strength Checker</h2>
+        <form id="password-form">
+            <label for="password">Enter Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password">
+            <button type="button" class="toggle-btn" onclick="togglePassword()"><span id="toggle-icon">Show</span> 👁️</button>
+            <div id="password-strength" class="strength"></div>
+        </form>
+    </div>
+
+    <script>
+        const passwordInput = document.getElementById("password");
+        const strengthDisplay = document.getElementById("password-strength");
+    
+        passwordInput.addEventListener("input", function() {
+            const password = passwordInput.value;
+            updateStrength(password);
+        });
+    
+        function updateStrength(password) {
+            const hasUpper = /[A-Z]/.test(password);
+            const hasLower = /[a-z]/.test(password);
+            const hasDigit = /[0-9]/.test(password);
+            const hasSpecial = /[@!#$%^&*()_\-+={}[\]:;'"?/>.<,~`]/.test(password);
+            const lengthOk = password.length > 8;
+    
+            let strength = "weak";
+    
+            if (hasUpper && hasLower && hasDigit && hasSpecial && lengthOk) {
+                strength = "strong";
+            } else {
+                let conditionsMet = [hasUpper && hasLower, hasDigit, hasSpecial, lengthOk].filter(Boolean).length;
+                if (conditionsMet >= 3) {
+                    strength = "medium";
+                }
+            }
+    
+            strengthDisplay.textContent = `Strength: ${strength.charAt(0).toUpperCase() + strength.slice(1)}`;
+            strengthDisplay.className = `strength ${strength}`;
+        }
+    
+        // Function to toggle the visibility of the password
+        function togglePassword() {
+            const passwordInput = document.getElementById("password");
+            const toggleButton = document.querySelector(".toggle-btn");
+            const toggleIcon = document.getElementById("toggle-icon");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text"; 
+                toggleIcon.textContent = "🙈";  
+                toggleButton.innerHTML = `<span id="toggle-icon">Hide </span>🙈`;  // Change button text
+            } else {
+                passwordInput.type = "password"; 
+                toggleIcon.textContent = "👁️";  
+                toggleButton.innerHTML = `<span id="toggle-icon">Show </span>👁️`; 
+            }
+        }
+    </script>
+</body>
+</html>
